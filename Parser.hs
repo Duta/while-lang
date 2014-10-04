@@ -13,14 +13,12 @@ parse :: [Token] -> Maybe [FullAST]
 parse input = evalStateT (many parseAST) input
 
 reqToken' :: (Token -> Bool) -> Parser Token
-reqToken' p = do
-  input <- get
-  case input of
-    [] -> fail ""
-    (t:input') ->
-      if p t
-      then put input' >> return t
-      else fail ""
+reqToken' p = StateT check
+  where
+    check [] = Nothing
+    check (t:input)
+      | p t       = Just (t, input)
+      | otherwise = Nothing
 
 reqToken :: Token -> Parser Token
 reqToken = reqToken' . (==)

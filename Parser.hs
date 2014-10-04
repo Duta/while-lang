@@ -1,7 +1,8 @@
 module Parser (parse) where
 
 import Control.Applicative ((<$>), (<|>), many)
-import Control.Monad.State (StateT, get, put, runStateT, evalStateT)
+import Control.Monad.State (StateT(..), get, put, runStateT, evalStateT)
+import Data.Maybe (fromMaybe)
 
 import AST (Identifier, FullAST(..), FullExpr(..), F_UOp(..), F_BOp(..))
 import Token (Token(..))
@@ -77,16 +78,28 @@ parseAssign = do
   return $ F_Assign var expr
 
 parseExpr :: Parser FullExpr
-parseExpr = parseUOp
-        <|> parseVar
-        <|> parseInt
-        <|> parseBool
+parseExpr = parseBOp
+        <|> parseExpr'
+
+parseExpr' :: Parser FullExpr
+parseExpr' = parseParens
+         <|> parseUOp
+         <|> parseVar
+         <|> parseInt
+         <|> parseBool
+
+parseParens :: Parser FullExpr
+parseParens = do
+  reqToken T_LParen
+  expr <- parseExpr
+  reqToken T_RParen
+  return expr
 
 parseBOp :: Parser FullExpr
 parseBOp = do
-  expr1 <- parseExpr
+  expr1 <- parseExpr'
   op    <- infixOp
-  expr2 <- parseExpr
+  expr2 <- parseExpr'
   return $ F_BOp op expr1 expr2
 
 parseUOp :: Parser FullExpr

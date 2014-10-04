@@ -3,8 +3,7 @@ module Lexer (lex) where
 import Control.Arrow (second)
 import Control.Applicative ((<$>))
 import Data.Char (isAlpha, isAlphaNum, isDigit)
-import Data.Foldable (Foldable, foldr)
-import Prelude hiding (lex, foldr)
+import Prelude hiding (lex)
 
 import Token (Token(..))
 
@@ -19,7 +18,7 @@ lex = useLexers
   , matchIdentifier
   ]
 
-useLexers :: Foldable t => t Lexer -> String -> Maybe [Token]
+useLexers :: [Lexer] -> String -> Maybe [Token]
 useLexers lexers = useLexers' . skipWhitespace
   where
     useLexers' :: String -> Maybe [Token]
@@ -35,7 +34,7 @@ useLexers lexers = useLexers' . skipWhitespace
 skipWhitespace :: String -> String
 skipWhitespace = dropWhile (`elem` " \t\n\r")
 
-matchKeys :: Foldable t => t (String, Token) -> Lexer
+matchKeys :: [(String, Token)] -> Lexer
 matchKeys keys input = foldr matchKey Nothing keys
   where
     matchKey :: Folder (String, Token) LexResult

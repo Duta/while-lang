@@ -84,9 +84,9 @@ parseExpr = parseBOp
 parseExpr' :: Parser FullExpr
 parseExpr' = parseParens
          <|> parseUOp
-         <|> parseVar
-         <|> parseInt
          <|> parseBool
+         <|> parseInt
+         <|> parseVar
 
 parseParens :: Parser FullExpr
 parseParens = do

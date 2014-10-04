@@ -9,7 +9,7 @@ import AST (MiniAST(..), MiniExpr(..), M_UOp(..), M_BOp(..))
 optimize :: [MiniAST] -> [MiniAST]
 optimize = constantFold
 
--- Also does some /very/ basic dead code
+-- Also does some /very/ basic dead code elim.
 constantFold :: [MiniAST] -> [MiniAST]
 constantFold = concatMap (toList . constantFold')
   where
@@ -46,6 +46,6 @@ constantFoldExpr expr = case expr of
       M_Int n -> M_Int $ negate n
       _       -> M_UOp op expr')
     where
-      expr' = constantFoldExpr expr'
+      expr' = constantFoldExpr expr
   M_BOp op expr1 expr2 -> error "cfBOp"
   expr -> expr

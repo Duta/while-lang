@@ -24,12 +24,12 @@ useLexers lexers = useLexers' . skipWhitespace
     useLexers' :: String -> Maybe [Token]
     useLexers' ""    = Just []
     useLexers' input = do
-        (token, input') <- foldr useLexer Nothing lexers
-        (token:) <$> useLexers lexers input'
+      (token, input') <- foldr useLexer Nothing lexers
+      (token:) <$> useLexers lexers input'
       where
         useLexer :: Folder Lexer LexResult
         useLexer lexer Nothing = lexer input
-        useLexer lexer match = match
+        useLexer lexer match   = match
 
 skipWhitespace :: String -> String
 skipWhitespace = dropWhile (`elem` " \t\n\r")
@@ -59,6 +59,11 @@ matchSymbol = matchKeys
   , (":", T_Colon)
   , (";", T_Semicolon)
   , ("=", T_Equal)
+  , ("!", T_Bang)
+  , ("+", T_Plus)
+  , ("-", T_Minus)
+  , ("*", T_Mul)
+  , ("/", T_Div)
   ]
 
 matchRule :: (Char -> Bool) -> (Char -> Bool) -> (String -> Token) -> Lexer

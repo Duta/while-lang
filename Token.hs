@@ -12,4 +12,9 @@ data Token
   | T_Colon
   | T_Semicolon
   | T_Equal
+  | T_Bang
+  | T_Plus
+  | T_Minus
+  | T_Mul
+  | T_Div
     deriving (Eq, Show)

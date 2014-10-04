@@ -17,4 +17,6 @@ data Token
   | T_Minus
   | T_Mul
   | T_Div
+  | T_Amper
+  | T_VertBar
     deriving (Eq, Show)

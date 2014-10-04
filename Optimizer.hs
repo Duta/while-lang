@@ -47,5 +47,31 @@ constantFoldExpr expr = case expr of
       _       -> M_UOp op expr')
     where
       expr' = constantFoldExpr expr
-  M_BOp op expr1 expr2 -> error "cfBOp"
+  M_BOp op expr1 expr2 -> (case op of
+    M_Add -> case (expr1', expr2') of
+      (M_Int m, M_Int n)   -> M_Int $ m + n
+      _                    -> M_BOp op expr1' expr2'
+    M_Sub -> case (expr1', expr2') of
+      (M_Int m, M_Int n)   -> M_Int $ m - n
+      _                    -> M_BOp op expr1' expr2'
+    M_Mul -> case (expr1', expr2') of
+      (M_Int m, M_Int n)   -> M_Int $ m * n
+      _                    -> M_BOp op expr1' expr2'
+    M_Div -> case (expr1', expr2') of
+      (M_Int m, M_Int n)   -> M_Int $ m `div` n
+      _                    -> M_BOp op expr1' expr2'
+    M_And -> case (expr1', expr2') of
+      (M_Bool m, M_Bool n) -> M_Bool $ m && n
+      _                    -> M_BOp op expr1' expr2'
+    M_Or  -> case (expr1', expr2') of
+      (M_Bool m, M_Bool n) -> M_Bool $ m || n
+      _                    -> M_BOp op expr1' expr2'
+    M_Eq  -> case (expr1', expr2') of
+      (M_Int m, M_Int n)   -> M_Bool $ m == n
+      (M_Bool m, M_Bool n) -> M_Bool $ m == n
+      _                    -> M_BOp op expr1' expr2'
+    )
+    where
+      expr1' = constantFoldExpr expr1
+      expr2' = constantFoldExpr expr2
   expr -> expr

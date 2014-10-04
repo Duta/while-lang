@@ -64,6 +64,8 @@ matchSymbol = matchKeys
   , ("-", T_Minus)
   , ("*", T_Mul)
   , ("/", T_Div)
+  , ("&", T_Amper)
+  , ("|", T_VertBar)
   ]
 
 matchRule :: (Char -> Bool) -> (Char -> Bool) -> (String -> Token) -> Lexer

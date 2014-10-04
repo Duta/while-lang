@@ -28,6 +28,8 @@ data F_BOp
   | F_Sub
   | F_Mul
   | F_Div
+  | F_And
+  | F_Or
   | F_Eq
   | F_Neq
     deriving (Eq, Show)
@@ -57,6 +59,8 @@ data M_BOp
   | M_Sub
   | M_Mul
   | M_Div
+  | M_And
+  | M_Or
   | M_Eq
     deriving (Eq, Show)
 
@@ -85,6 +89,8 @@ reduceExpr expr = case expr of
     F_Sub -> M_BOp M_Sub expr1' expr2'
     F_Mul -> M_BOp M_Mul expr1' expr2'
     F_Div -> M_BOp M_Div expr1' expr2'
+    F_And -> M_BOp M_And expr1' expr2'
+    F_Or  -> M_BOp M_Or  expr1' expr2'
     F_Eq  -> M_BOp M_Eq  expr1' expr2'
     F_Neq -> M_UOp M_Not (M_BOp M_Eq expr1' expr2'))
     where

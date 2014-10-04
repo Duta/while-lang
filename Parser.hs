@@ -113,12 +113,14 @@ prefixOp = (reqToken T_Bang  >> return F_Not)
        <|> (reqToken T_Minus >> return F_Neg)
 
 infixOp :: Parser F_BOp
-infixOp = (reqToken T_Plus  >> return F_Add)
-      <|> (reqToken T_Minus >> return F_Sub)
-      <|> (reqToken T_Mul   >> return F_Mul)
-      <|> (reqToken T_Div   >> return F_Div)
-      <|> (reqToken T_Equal >> return F_Eq)
-      <|> (reqTokens [T_Bang, T_Equal] >> return F_Neq)
+infixOp = (reqToken  T_Plus                 >> return F_Add)
+      <|> (reqToken  T_Minus                >> return F_Sub)
+      <|> (reqToken  T_Mul                  >> return F_Mul)
+      <|> (reqToken  T_Div                  >> return F_Div)
+      <|> (reqTokens [T_Amper,   T_Amper]   >> return F_And)
+      <|> (reqTokens [T_VertBar, T_VertBar] >> return F_Or)
+      <|> (reqToken  T_Equal                >> return F_Eq)
+      <|> (reqTokens [T_Bang,    T_Equal]   >> return F_Neq)
 
 parseVar :: Parser FullExpr
 parseVar = F_Var <$> identifier
